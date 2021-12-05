@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.ac.mappers.TimeMapper">
+	<select id="clockSaveAtt" resultType="String">
+		INSERT INTO
+		times(employeeid , dates , attendtime)
+		VALUES(#{id},#{clock},#{clock})
+	</select>
+	<select id="clockSaveLea" resultType="String">
+		UPDATE times SET leavetime
+		= #{clock} WHERE employeeid = #{id} AND attendtime = #{attend}
+	</select>
+	<select id="submit" resultType="String">
+		UPDATE times SET busindesccode =
+		#{submit} WHERE employeeid = #{id} AND attendtime = #{attend}
+	</select>
+	<select id="modificationTime" resultType="String">
+		UPDATE times SET
+		attendtime = #{start}, leavetime = #{end},
+		busindesccode =
+		#{modificationClass} WHERE employeeid = #{id} AND
+		attendtime =
+		#{attend}
+	</select>
+</mapper>	

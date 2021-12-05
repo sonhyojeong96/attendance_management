@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" " http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jp.ac.mappers.CommonMapper">
+
+	<!-- 	共通マスターコード挿入	 -->
+	<insert id="insertCommon">
+		INSERT
+		INTO commons(
+			code,
+			codename,
+			registred,
+			registredtime,
+			updated,
+			updatedtime
+		)
+		VALUES (
+			#{code},
+			#{codename},
+			#{registred},
+			CURRENT_DATE,
+			#{updated},
+			#{updatedtime}
+		)
+	</insert>
+	
+	<!-- 	共通マスターリスト	 -->
+	<select id="commonCodeList" resultType="jp.ac.beans.CommonModel">		
+		
+		SELECT
+			code, codename
+		FROM
+			commons
+		<if test="kind != null">
+		WHERE TEXT(code) LIKE '${kind}%'
+		</if>
+		ORDER BY code
+	</select>
+	
+	<!-- 	共通マスター コード検索	 -->
+	<select id="getCommonCode" resultType="jp.ac.beans.CommonModel">		
+		SELECT
+			CODE, CODENAME
+		FROM
+			COMMONS
+		WHERE CODE = #{CODE}		
+	</select>
+	
+	<!-- 	共通マスター コード削除	 -->
+	<delete id="commonCodeDelete">
+		DELETE
+		FROM commons
+		WHERE
+			code = #{code}
+	</delete>
+	
+	<!-- 	共通マスター コード修正	 -->
+	<select id="commonCodeModify" resultType="String">
+		UPDATE commons SET
+		code = #{code}, codename = #{codename}
+		WHERE code = #{code}
+	</select>
+	
+	<!-- 	共通マスターリスト(ページング適用)		-->
+	<select id="getListPaging" resultType="jp.ac.beans.CommonModel">
+		<![CDATA[
+			SELECT * FROM (
+    			SELECT (ROW_NUMBER() OVER(ORDER BY CODE)) AS RN, CODE, CODENAME FROM COMMONS
+		]]>
+		<if test="type != null">
+			<include refid="search"></include>
+		</if>
+		<![CDATA[
+			) AS X	 
+			WHERE RN > ((${pageNum} - 1) * ${amount}) and RN <= ${pageNum} * ${amount}
+		]]>
+	</select>
+	
+	<!--	検索条件		-->
+	<sql id="search">
+		WHERE TEXT(code) LIKE '${type}%'
+	</sql>
+	
+	<!--	総レコード数検索	　-->
+	<select id="getTotalRecord" resultType="int">
+		select count(*) from commons
+		<if test="type != null">
+			<include refid="search"></include>
+		</if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.ac.mappers.HolidayApplyMapper">
+
+	<!-- セッションIDでユーザー名を取得 -->
+	<select id="getEmpName" resultType="String">
+		SELECT
+		    employname 
+		FROM
+		    employee 
+		WHERE
+		    loginid = #{id}
+	</select>
+
+	<!-- 休暇申請テーブルのシリアルナンバーの中で最も大きい数字を取得 -->
+	<select id="getMaxSeriesNum" resultType="int">
+		SELECT
+		    coalesce(max(seriesnum), 0) 
+		FROM
+		    empyearfreetime
+	</select>
+
+	<!-- 休暇申請 -->
+	<insert id="holidayInsert">
+		INSERT 
+		INTO empyearfreetime( 
+		    seriesnum
+		    , employeeid
+		    , employeename
+		    , yeartimecode
+		    , fromdate
+		    , todate
+		    , grounds
+		    , days
+		    , registred
+		    , registredtime
+		    , updated
+		    , updatedtime
+		)
+		VALUES ( 
+		    #{seriesNum}
+		    , #{employeeId}
+		    , #{employeeName}
+		    , #{yearTimeCode}
+		    , TO_DATE(#{fromDate}, 'yyyy/mm/dd')
+		    , TO_DATE(#{toDate}, 'yyyy/mm/dd')
+		    , #{grounds}
+		    , TO_DATE(#{toDate}, 'yyyy/mm/dd') - TO_DATE(#{fromDate}, 'yyyy/mm/dd')
+		    , #{registred}
+		    , CURRENT_DATE
+		    , #{updated}
+		    , #{updatedTime}
+		)
+	</insert>
+
+	<!--　申請リスト　-->
+	<select id="holidayList"
+		resultType="jp.ac.beans.HolidayApplyModel">
+		SELECT
+		    emp.*, com.code, com.codename 
+		FROM
+		    empyearfreetime emp, commons com 
+		WHERE
+			emp.employeeid = #{employeeId} and 
+		    emp.yeartimecode = com.code
+			<if test='year != null and month == "all"'>
+				and to_char(emp.fromdate,'yyyy') = #{year}
+			</if>
+			<if test='year != null and month != "all"'>
+				and to_char(emp.fromdate,'yyyy') = #{year} and to_char(emp.fromdate,'MM') = #{month}
+			</if>
+			
+		ORDER BY
+    		emp.seriesnum desc 
+	</select>
+
+	<!--　申請リスト　-->
+	<select id="holidayType"
+		resultType="jp.ac.beans.HolidayApplyModel">
+		SELECT
+		    code, codename 
+		FROM
+			commons 
+		WHERE
+    		TEXT(code) LIKE '100%'
+	</select>
+		
+	<!-- リスト削除 -->
+	<delete id="holidayDelete">
+		DELETE 
+		FROM
+		    empyearfreetime 
+		WHERE
+		    seriesnum = #{seriesNum}
+	</delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.ac.mappers.AttSelectMapper">
+    <select id="attSelect"  resultType="jp.ac.beans.AttSelectModel" >
+		SELECT CASE WHEN dates IS NULL THEN '0000/00/00'
+        		ELSE to_char(dates,'YYYY/mm/dd') END AS date1,
+       			CASE WHEN dates IS NULL THEN '00/00'
+        		ELSE to_char(dates,'mm/dd') END AS date2,
+       			CASE WHEN attendtime IS NULL THEN '00:00:00'
+        		ELSE to_char(attendtime,'HH24:MI:SS') END AS attendtime,
+       			CASE WHEN leavetime IS NULL THEN '00:00:00'
+        		ELSE to_char(leavetime,'HH24:MI:SS') END AS leavetime,
+        		CASE WHEN busindesccode IS NULL THEN 'NO DATA'
+        		ELSE busindesccode END AS busindesccode,
+       			CASE WHEN workcontents IS NULL THEN '0000'
+        		ELSE workcontents END AS workcontents, 
+       				cast(to_char(overtimeendtime,'HH')AS INTEGER)-cast(to_char(overtimestarttime,'HH')AS INTEGER) overworktime, 
+       			CASE WHEN overworkcontents IS NULL THEN 'NO DATA'
+        		ELSE overworkcontents END AS overworkcontents
+       		FROM times t, employee emp
+       		WHERE t.employeeid = emp.employeeid
+       		AND emp.employeeid = #{employeeid}
+    </select>
+</mapper>

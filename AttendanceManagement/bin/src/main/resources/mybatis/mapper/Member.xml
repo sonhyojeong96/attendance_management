@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.ac.mappers.MemberMapper">
+	<select id="save" resultType="jp.ac.beans.MemberModel">
+		INSERT INTO employee(employeeid, departcode, employname, loginid, loginpass,
+		phonetic, zipcode, address1, address2, phonenum, mobilenum, email)
+		VALUES(#{employeeId}, #{departCode}, #{employName}, #{loginId},
+		#{loginPass}, #{phonetic}, #{zipCode}, #{address1}, #{address2},
+		#{phoneNum}, #{mobileNum}, #{email})
+	</select>
+</mapper>

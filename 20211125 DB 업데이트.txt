@@ -1,0 +1,127 @@
+DROP TABLE IF EXISTS Times; 
+
+-- 勤怠テーブル
+CREATE TABLE Times( 
+    -- 勤怠ID
+    TimeId serial NOT NULL
+    ,                                           -- 社員ID
+    EmployeeId int NOT NULL
+    ,                                           -- 日付
+    Dates timestamp
+    ,                                           -- 出勤時刻
+    AttendTime timestamp
+    ,                                           -- 退勤時刻
+    LeaveTime timestamp
+    ,                                           -- 業務内容コード
+    BusinDescCode char (4)
+    ,                                           -- 超過勤怠区分
+    OverTimeClass numeric (1)
+    ,                                           -- 超過開始時刻
+    OverTimeStartTime timestamp
+    ,                                           -- 超過終了時刻
+    OvertimeEndTime timestamp
+    ,                                           -- 登録者
+    Registred varchar (255)
+    ,                                           -- 登録日時
+    RegistredTime timestamp
+    ,                                           -- 更新者
+    Updated varchar (255)
+    ,                                           -- 更新日時
+    UpdatedTime timestamp
+    ,                                           -- 勤務内容
+    WorkContents varchar (3000)
+    ,                                           -- 超過勤務内容
+    OverWorkContents varchar (3000)
+    , PRIMARY KEY (TimeId)
+); 
+
+COMMENT 
+    ON TABLE Times IS '勤怠テーブル'; 
+
+COMMENT 
+    ON COLUMN Times.TimeId IS '勤怠ID'; 
+
+COMMENT 
+    ON COLUMN Times.EmployeeId IS '社員ID'; 
+
+COMMENT 
+    ON COLUMN Times.Dates IS '日付'; 
+
+COMMENT 
+    ON COLUMN Times.AttendTime IS '出勤時刻'; 
+
+COMMENT 
+    ON COLUMN Times.LeaveTime IS '退勤時刻'; 
+
+COMMENT 
+    ON COLUMN Times.BusinDescCode IS '業務内容コード'; 
+
+COMMENT 
+    ON COLUMN Times.OverTimeClass IS '超過勤怠区分'; 
+
+COMMENT 
+    ON COLUMN Times.OverTimeStartTime IS '超過開始時刻'; 
+
+COMMENT 
+    ON COLUMN Times.OvertimeEndTime IS '超過終了時刻'; 
+
+COMMENT 
+    ON COLUMN Times.Registred IS '登録者'; 
+
+COMMENT 
+    ON COLUMN Times.RegistredTime IS '登録日時'; 
+
+COMMENT 
+    ON COLUMN Times.Updated IS '更新者'; 
+
+COMMENT 
+    ON COLUMN Times.UpdatedTime IS '更新日時'; 
+
+COMMENT 
+    ON COLUMN Times.WorkContents IS '勤務内容'; 
+
+COMMENT 
+    ON COLUMN Times.OverWorkContents IS '超過勤務内容'; 
+
+ALTER TABLE Times ADD FOREIGN KEY (EmployeeId) REFERENCES Employee(EmployeeId) 
+    ON UPDATE RESTRICT 
+        ON 
+DELETE RESTRICT; 
+
+INSERT 
+INTO commons(code, codename) 
+values (1011, '株式会社SIMILE')
+, (1002, '親会社');
+
+INSERT 
+INTO commons(code, codename) 
+values (2001, 'システム開発部')
+, (2002, '営業部');
+
+INSERT 
+INTO commons(code, codename) 
+values (3000, '待機')
+, (3001, '承認')
+, (3002, '返戻');
+
+INSERT 
+INTO commons(code, codename) 
+values (4001, '代表');
+, (4002, '部長')
+, (4003, '課長')
+, (4004, '代理'),
+, (4005, '社員');
+
+INSERT 
+INTO commons(code, codename) 
+values (5001, '社内勤務')
+, (5002, '派遣勤務'),
+, (5003, 'その他');
+
+INSERT 
+INTO commons(code, codename) 
+values (6001, '休暇')
+, (6002, '出産休暇')
+, (6003, '慶弔休暇')
+, (6004, '病欠')
+, (6005, 'その他');
